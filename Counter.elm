@@ -1,4 +1,4 @@
-module Counter (Model, init, Action, update, view) where
+module Counter (Model, init, Action, update, view, viewWithRemoveButton, Context) where
 
 import Html exposing (..)
 import Html.Attributes exposing (style)
@@ -32,6 +32,23 @@ view address model =
     , button [ onClick address Double ] [ text "*2" ]
     ]
 
+
+type alias Context =
+  { actions : Signal.Address Action
+  , remove  : Signal.Address ()
+  }
+
+viewWithRemoveButton : Context -> Model -> Html
+viewWithRemoveButton context model =
+  div [ containerStyle ]
+    [ button [ onClick context.actions Decrement ] [ text "-" ]
+    , div [ countStyle ] [ text (toString model) ]
+    , button [ onClick context.actions Increment ] [ text "+" ]
+    , button [ onClick context.actions Double ] [ text "*2" ]
+    , div [ countStyle ] []
+    , button [ onClick context.remove () ] [ text "X" ]
+    ]
+
 countStyle : Attribute
 countStyle =
   style
@@ -45,7 +62,7 @@ countStyle =
 containerStyle : Attribute
 containerStyle =
   style
-    [ ("width", "100px")
+    [ ("width", "200px")
     , ("margin", "20px 0")
     , ("text-align", "center")
     ]
